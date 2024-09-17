@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -73,19 +74,21 @@ func (ctrl *controller) Config(c *gin.Context) {
 func (ctrl *controller) HandleCreatePaymentIntent(c *gin.Context) {
 
 	var product models.Product
-	stripe.Key = utils.GetEnv("STRIPE_SECRET")
+	stripe.Key = utils.GetEnv("STRIPE_SECRET_KEY")
 
 	if err := c.ShouldBindJSON(&product); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
+	fmt.Println(product.Uuid)
+
 	data, err := ctrl.repo.GetByUuid(product.Uuid)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
-
+	fmt.Println(int64(data.Price))
 	params := &stripe.PaymentIntentParams{
 		Amount:   stripe.Int64(int64(data.Price)),
 		Currency: stripe.String(string(stripe.CurrencyTHB)),

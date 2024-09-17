@@ -4,6 +4,7 @@ import (
 	"context"
 
 	models "github.com/idontknowtoobrother/stripe-go-lang/Models"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -27,7 +28,7 @@ func NewRepo(ctx context.Context, db *mongo.Database) Repo {
 
 func (r *repository) GetAll() (*[]models.Product, error) {
 	var products []models.Product
-	cursor, err := r.db.Collection("products").Find(r.ctx, nil)
+	cursor, err := r.db.Collection("products").Find(r.ctx, bson.M{})
 	if err != nil {
 		return nil, err
 	}
@@ -40,7 +41,9 @@ func (r *repository) GetAll() (*[]models.Product, error) {
 
 func (r *repository) GetByUuid(uuid string) (*models.Product, error) {
 	var product models.Product
-	err := r.db.Collection(product.GetCollectionName()).FindOne(r.ctx, models.Product{Uuid: uuid}).Decode(&product)
+	err := r.db.Collection("products").FindOne(r.ctx, bson.M{
+		"uuid": uuid,
+	}).Decode(&product)
 	if err != nil {
 		return nil, err
 	}

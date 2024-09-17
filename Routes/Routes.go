@@ -12,7 +12,7 @@ func SetupRoutes(ctrl controllers.Controller) *gin.Engine {
 	v1.GET("/products", ctrl.GetProducts)
 	v1.POST("/products", ctrl.CreateProduct)
 	v1.GET("/config", ctrl.Config)
-	v1.GET("/create-payment-intent", ctrl.HandleCreatePaymentIntent)
+	v1.POST("/create-payment-intent", ctrl.HandleCreatePaymentIntent)
 
 	return r
 }

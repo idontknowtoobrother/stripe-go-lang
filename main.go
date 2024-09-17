@@ -29,7 +29,7 @@ func main() {
 	engine.Use(cors.Default())
 
 	fmt.Println("Server is running on port: ", utils.GetEnv("PORT"))
-	if err := engine.Run(utils.GetEnv("PORT")); err != nil {
+	if err := engine.Run(":" + utils.GetEnv("PORT")); err != nil {
 		panic(err)
 	}
 }
